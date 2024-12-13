@@ -1,0 +1,12 @@
+Flask
+Flask-Cors
+Flask-PyMongo
+python-dotenv
+cryptography
+fpdf
+pymongo
+Werkzeug
+bcrypt
+jwt
+pandas
+reportlab
