@@ -5,14 +5,13 @@ from email.mime.base import MIMEBase
 from email import encoders
 from config import Config
 
-def send_email(recipient_email, subject, body, attachment_path=None, from_address="unikrewcompany@gmail.com"):
+def send_email(recipient_email, subject, body, attachment_path=None):
     # sender_email = from_address.split("<")[1].replace(">", "").strip()  # Extract email part if `from_address` has name
     sender_password = Config.EMAIL_PASSWORD
     sender_email=Config.EMAIL_ADDRESS
 
     # Email setup
     msg = MIMEMultipart()
-    msg['from'] = from_address  # Full "Company Name <email@domain.com>" format
     msg['to'] = recipient_email
     msg['subject'] = subject
 
@@ -30,7 +29,6 @@ def send_email(recipient_email, subject, body, attachment_path=None, from_addres
 
     # Send email
     with smtplib.SMTP(Config.SMTP_SERVER, Config.SMTP_PORT) as server:
-        server.set_debuglevel(1)
         server.starttls()
         server.login("apikey", sender_password)
-        server.sendmail(from_address, recipient_email, msg.as_string())
+        server.sendmail(Config.EMAIL_ADDRESS, recipient_email, msg.as_string())

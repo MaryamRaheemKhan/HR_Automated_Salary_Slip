@@ -8,37 +8,12 @@ from models.hr_model import add_hr, find_hr_by_email
 auth_bp = Blueprint('auth', __name__)
 
 # Register Route
-# @auth_bp.route('/register', methods=['POST'])
-# def register():
-#     try:
-#         data = request.json
-#         if not  data['username'] or not data['email'] or not data['password']:
-#           return jsonify({'error': 'All fields are required'}), 400
-        
-#         # Hash the password before storing it
-#         password = data['password']
-#         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-#         print(f"The hashed password is {hashed_password.decode('utf-8')}")  # Debugging log
-        
-#         hr_data = {
-#             "username": data['username'],
-#             "email": data['email'],
-#             "password": hashed_password.decode('utf-8')  # Store the hashed password
-#         }
-        
-#         # Add HR data to database
-#         add_hr(hr_data)
-#         return jsonify({"message": "HR registered successfully!"}), 201
-
-#     except Exception as e:
-#         print(f"Error in register: {str(e)}")  # Log error for better debugging
-#         return jsonify({"message": f"An error occurred: {str(e)}"}), 400
+@auth_bp.route('/register', methods=['POST'])
 def register():
     try:
         data = request.json
+
         # Ensure all required fields are provided
-        # if not data.get('username') or not data.get('email') or not data.get('password'):
-        #     return jsonify({'error': 'All fields are required'}), 400
         if not data.get('username') or not data.get('email') or not data.get('password'):
             return jsonify({"error": "Missing fields"}), 400
 

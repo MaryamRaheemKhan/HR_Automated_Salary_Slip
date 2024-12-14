@@ -46,8 +46,7 @@ def send_bulk_emails():
             recipient_email=email_data["to"],    # Correct keyword: 'to' should map to 'recipient_email'
             subject=email_data["subject"],
             body=email_data["body"],
-            attachment_path=attachment_path,
-            from_address=email_data["from"]
+            attachment_path=attachment_path
              )
             results.append({"to": email_data["to"], "status": "success"})
 
