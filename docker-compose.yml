@@ -1,6 +1,6 @@
 services:
   backend:
-    image: registry.gitlab.com/unikrew/backend
+    image: registry.gitlab.com/unikrew/backend:latest
     ports:
       - 5000:8000
     environment:
@@ -13,7 +13,7 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - CORS_ORIGIN=${CORS_ORIGIN}
   frontend:
-    image: registry.gitlab.com/unikrew/frontend
+    image: registry.gitlab.com/unikrew/frontend:latest
     ports:
       - 80:80
       - 443:443
