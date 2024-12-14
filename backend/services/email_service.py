@@ -12,6 +12,7 @@ def send_email(recipient_email, subject, body, attachment_path=None):
 
     # Email setup
     msg = MIMEMultipart()
+    msg['from'] = sender_email
     msg['to'] = recipient_email
     msg['subject'] = subject
 
@@ -31,4 +32,4 @@ def send_email(recipient_email, subject, body, attachment_path=None):
     with smtplib.SMTP(Config.SMTP_SERVER, Config.SMTP_PORT) as server:
         server.starttls()
         server.login("apikey", sender_password)
-        server.sendmail(Config.EMAIL_ADDRESS, recipient_email, msg.as_string())
+        server.sendmail(sender_email, recipient_email, msg.as_string())
