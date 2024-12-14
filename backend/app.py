@@ -5,6 +5,7 @@ from controllers import auth_controller, employee_controller, pdf_controller, em
 from utils.logger import log_action
 import os
 from dotenv import load_dotenv
+from config import Config
 PDF_FOLDER = "pdfs"
 load_dotenv()
 
@@ -12,7 +13,7 @@ app = Flask(__name__)
 app.config.from_object('config.Config')
 
 # Enable CORS
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/*": {"origins": Config.CORS_ORIGIN}})
 
 # Initialize MongoDB
 mongo.init_app(app)

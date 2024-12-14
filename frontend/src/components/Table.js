@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { updatePdfFilesByUser, saveGeneratedPdfs, updatePdfFiles } from "../app/features/slices/fileSlice";
 import axios from "axios";
 import { format } from "date-fns";
+import config from "../config";
 
 const Table = () => {
   const dispatch = useDispatch();
@@ -125,7 +126,7 @@ const Table = () => {
   };
 
   const handlePdfClick = (url) => {
-    const formattedUrl = `http://localhost:5000/api/pdf/${url.replace(/\\/g, '/')}`;
+    const formattedUrl = `${config.API_URL}/api/pdf/${url.replace(/\\/g, '/')}`;
     setSelectedPdfUrl(formattedUrl);
     const link = document.createElement('a');
     link.href = formattedUrl;
@@ -149,7 +150,7 @@ const Table = () => {
       }
 
       const { data } = await axios.post(
-        "http://localhost:5000/api/pdf/generate",
+        `${config.API_URL}/api/pdf/generate`,
         { data: dataToSend },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -161,7 +162,7 @@ const Table = () => {
           employee_id: employee.EmployeeID,
           employee_name: employee.Name,
           to: employee.Email,
-          from: "unikrewcompany@gmail.com",
+          from: "unikrewapp@outlook.com",
           subject: `Your Monthly Salary Slip for ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })}`,
           body: `Dear ${employee.Name},\n\nPlease find your salary slip attached for the month of ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })}.\n\nBest regards,\nYour Company.`,
           attachment_path: pdfFile ? pdfFile.pdfPath : "",
@@ -169,7 +170,7 @@ const Table = () => {
       });
 
       await axios.post(
-        "http://localhost:5000/api/email/send",
+        `${config.API_URL}/api/email/send`,
         { emailData },
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStatus, updateParsedData } from "../app/features/slices/fileSlice";
+import config from "../config";
 
 
 
@@ -26,7 +27,7 @@ const FileUploadButton = () => {
         // Retrieve token from localStorage
         const token = localStorage.getItem("token");
         console.log("The token sent here is", token)
-        const response = await fetch("http://localhost:5000/api/employees/upload", {
+        const response = await fetch(`${config.API_URL}/api/employees/upload`, {
           method: "POST",
           body: formData,
           headers: {

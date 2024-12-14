@@ -4,6 +4,7 @@ import { styled } from '@mui/system';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import LoginPage from './Login';
+import config from '../config';
 
 
 // Custom styles using MUI's styled API
@@ -38,7 +39,7 @@ function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/register', formData);
+            const response = await axios.post(`${config.API_URL}/api/auth/register`, formData);
             if (response.status === 200) { // Check for success response status
                 setMessage('Registration successful! Redirecting to login...');
                 setTimeout(() => {

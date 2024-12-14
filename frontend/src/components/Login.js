@@ -3,6 +3,7 @@ import { Box, TextField, Button, Typography, Grid2, Paper } from '@mui/material'
 import { styled } from '@mui/system';
 import axios from 'axios'; // To make API requests
 import {useNavigate} from 'react-router-dom';
+import config from '../config';
 
 
 // Custom styles using MUI's styled API
@@ -28,59 +29,27 @@ export const LoginPage = () => {
   const [error, setError] = useState('');
   const navigate=useNavigate();
 
-//   const handleLogin = async (e) => {
 
-//     e.preventDefault();
-//     try {
-//       const response = await axios.post('http://localhost:5000/api/auth/login', {
-//         username: email,
-//         password: password,
-//       });
-//       console.log('Login successful:', response.data);
-//       // Handle success (e.g., save token, redirect user)
-//     } catch (err) {
-//       console.error('Login failed:', err);
-//       setError('Invalid email or password. Please try again.');
-//     }
-//   };
-// const handleLogin = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const response = await axios.post('http://localhost:5000/api/auth/login', {
-//         username: email,
-//         password: password,
-//       });
-//       console.log('Login successful:', response.data);
+  const handleLogin = async (e) => {
+      e.preventDefault();
+      try {
+        debugger
+        const response = await axios.post(`${config.API_URL}/api/auth/login`, {
+          username: email,
+          password: password,
+        });
+        console.log('Login successful:', response.data);
 
-//       // Store the token in localStorage
-//       localStorage.setItem('token', response.data.token);
+        // Store the token in localStorage
+        localStorage.setItem('token', response.data.token);
 
-//       // Redirect user to the dashboard or home page after login
-//       // window.location.href = '/dashboard'; // or use a react router method to navigate
-//     } catch (err) {
-//       console.error('Login failed:', err);
-//       setError('Invalid email or password. Please try again.');
-//     }
-// };
-const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
-        username: email,
-        password: password,
-      });
-      console.log('Login successful:', response.data);
-
-      // Store the token in localStorage
-      localStorage.setItem('token', response.data.token);
-
-      // Redirect user to the dashboard after login
-      navigate('/dashboard'); // Use navigate to go to the dashboard
-    } catch (err) {
-      console.error('Login failed:', err);
-      setError('Invalid email or password. Please try again.');
-    }
-};
+        // Redirect user to the dashboard after login
+        navigate('/dashboard'); // Use navigate to go to the dashboard
+      } catch (err) {
+        console.error('Login failed:', err);
+        setError('Invalid email or password. Please try again.');
+      }
+  };
 
 
   return (

@@ -7,6 +7,7 @@ fpdf
 pymongo
 Werkzeug
 bcrypt
-jwt
+PyJWT
 pandas
 reportlab
+openpyxl

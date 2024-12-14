@@ -12,3 +12,4 @@ class Config:
     SMTP_PORT = os.getenv("SMTP_PORT")
     UPLOAD_FOLDER = "uploads"
     PDF_FOLDER = "pdfs"
+    CORS_ORIGIN = os.getenv("CORS_ORIGIN")
