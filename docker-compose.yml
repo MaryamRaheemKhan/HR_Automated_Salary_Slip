@@ -1,0 +1,19 @@
+services:
+  backend:
+    image: registry.gitlab.com/unikrew/backend
+    ports:
+      - 5000:8000
+    environment:
+      - EMAIL_ADDRESS=${EMAIL_ADDRESS}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - SMTP_SERVER=${SMTP_SERVER}
+      - SMTP_PORT=${SMTP_PORT}
+      - MONGO_URI=${MONGO_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - CORS_ORIGIN=${CORS_ORIGIN}
+  frontend:
+    image: registry.gitlab.com/unikrew/frontend
+    ports:
+      - 80:80
+      - 443:443
