@@ -29,11 +29,8 @@ def send_email(recipient_email, subject, body, attachment_path=None, from_addres
         msg.attach(part)
 
     # Send email
-    # with smtplib.SMTP(Config.SMTP_SERVER, Config.SMTP_PORT) as server:
-    #     server.starttls()
-    #     server.login(sender_email, sender_password)
-    #     server.sendmail(from_address, recipient_email, msg.as_string())
-    with smtplib.SMTP('142.251.173.108', 587) as server:  # Use the IPv4 address directly
-          server.starttls()
-          server.login(sender_email, sender_password)
-          server.sendmail(from_address, recipient_email, msg.as_string())
+    with smtplib.SMTP(Config.SMTP_SERVER, Config.SMTP_PORT) as server:
+        server.set_debuglevel(1)
+        server.starttls()
+        server.login("apikey", sender_password)
+        server.sendmail(from_address, recipient_email, msg.as_string())
