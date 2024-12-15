@@ -9,9 +9,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<Register />} />
-        
+        <Route path="/" element={<Register />} />
+        <Route path="/Register" element={<Register />} />
         {/* Protect the Dashboard route using PrivateRoute */}
         <Route 
           path="/dashboard" 

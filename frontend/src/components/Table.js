@@ -1,17 +1,35 @@
-import React, { useState, useEffect } from "react";
-import { MaterialReactTable } from "material-react-table";
-import { CSVLink } from "react-csv";
-import { Button, Box, Tooltip, Modal, List, ListItem, ListItemText } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
-import { updatePdfFilesByUser, saveGeneratedPdfs, updatePdfFiles } from "../app/features/slices/fileSlice";
-import axios from "axios";
-import { format } from "date-fns";
-import config from "../config";
+
+import React, { useState, useEffect } from "react";  // Import React and relevant hooks
+import { MaterialReactTable } from "material-react-table";  // Import MaterialReactTable component for table rendering
+import { CSVLink } from "react-csv";  // Import CSVLink for exporting table data to CSV
+import {
+  Button,
+  Box,
+  Tooltip,
+  Modal,
+  List,
+  ListItem,
+  ListItemText,
+  Snackbar,
+  Alert,
+  Typography,
+} from "@mui/material";  // Import Material UI components for styling and UI
+import { useSelector, useDispatch } from "react-redux";  // Import Redux hooks to interact with the state
+import { updatePdfFilesByUser, saveGeneratedPdfs } from "../app/features/slices/fileSlice";  // Import actions to interact with Redux state
+import axios from "axios";  // Import axios for making HTTP requests
+import { format } from "date-fns";  // Import date-fns for date formatting
+import config from "../config";  // Import config for accessing API URL
+
 
 const Table = () => {
   const dispatch = useDispatch();
   const parsedData = useSelector((state) => state.file.parsedData);
   const pdfFilesByUser = useSelector((state) => state.file.pdfFilesByUser);
+    const [snackbar, setSnackbar] = useState({
+    open: false,  // State to control snackbar visibility
+    message: "",  // State to store snackbar message
+    severity: "info",  // State to store severity level of the snackbar (info, success, error, etc.)
+  });
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
@@ -134,89 +152,77 @@ const Table = () => {
     link.click();
   };
 
+    // Function to handle CSV export
+  const handleCSV = () => {
+    setSnackbar({
+      open: true,
+      message: "CSV Files successfully downloaded",  // Success message for CSV download
+      severity: "success",
+    });
+  };
+  // Function to handle PDF generation
   const handleGeneratePdf = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");  // Get the token for authentication
       if (!token) {
-        alert("User is not authenticated. Token not found.");
-        return;
+        setSnackbar({ open: true, message: "User is not authenticated.", severity: "error" });
+        return;  // Return early if the user is not authenticated
       }
 
-      const dataToSend = parsedData.length > 0 ? parsedData : JSON.parse(localStorage.getItem("data"));
-
+      const dataToSend = parsedData.length > 0 ? parsedData : JSON.parse(localStorage.getItem("data"));  // Get the data to send
       if (!dataToSend || dataToSend.length === 0) {
-        alert("No data available for PDF generation.");
-        return;
+        setSnackbar({ open: true, message: "No data available for PDF generation.", severity: "warning" });
+        return;  // Return early if no data is available
       }
 
+      // Make the API request to generate PDFs
       const { data } = await axios.post(
         `${config.API_URL}/api/pdf/generate`,
         { data: dataToSend },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      const pdfFiles = data.files;
-      const emailData = dataToSend.map((employee) => {
-        const pdfFile = pdfFiles.find((file) => file.employeeID === employee.EmployeeID);
-        return {
-          employee_id: employee.EmployeeID,
-          employee_name: employee.Name,
-          to: employee.Email,
-          from: "unikrewapp@outlook.com",
-          subject: `Your Monthly Salary Slip for ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })}`,
-          body: `Dear ${employee.Name},\n\nPlease find your salary slip attached for the month of ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })}.\n\nBest regards,\nYour Company.`,
-          attachment_path: pdfFile ? pdfFile.pdfPath : "",
-        };
+      const pdfFiles = data.files;  // Extract the PDF files from the response
+
+      // Show success snackbar
+      setSnackbar({
+        open: true,
+        message: "PDFs generated and emails sent successfully!",
+        severity: "success",
       });
 
-      await axios.post(
-        `${config.API_URL}/api/email/send`,
-        { emailData },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      let pdfArray = JSON.parse(localStorage.getItem("pdfArray")) || [];  // Get existing PDF data from local storage
 
-      alert("PDFs generated and emails sent successfully!");
-      let pdfArray = JSON.parse(localStorage.getItem("pdfArray")) || [];
+      // Update the pdfArray with new PDF files
+      pdfFiles.forEach((pdfFile) => {
+        const existingIndex = pdfArray.findIndex((item) => item.employeeID === pdfFile.employeeID);
 
-      // Loop through the newly generated pdfFiles to add them to the pdfArray
-      pdfFiles.forEach(pdfFile => {
-        const existingEmployeeIndex = pdfArray.findIndex(item => item.employeeID === pdfFile.employeeID);
-
-        if (existingEmployeeIndex !== -1) {
-          // If the employee already exists, ensure that pdfPaths is an array before pushing
-          if (!pdfArray[existingEmployeeIndex].pdfPaths) {
-            pdfArray[existingEmployeeIndex].pdfPaths = []; // Initialize pdfPaths if it's undefined
-          }
-          pdfArray[existingEmployeeIndex].pdfPaths.push(pdfFile.pdfPath);
+        if (existingIndex !== -1) {
+          if (!pdfArray[existingIndex].pdfPaths) pdfArray[existingIndex].pdfPaths = [];
+          pdfArray[existingIndex].pdfPaths.push(pdfFile.pdfPath);
         } else {
-          // If the employee doesn't exist, create a new entry with pdfPaths as an array
-          pdfArray.push({
-            employeeID: pdfFile.employeeID,
-            pdfPaths: [pdfFile.pdfPath]
-          });
+          pdfArray.push({ employeeID: pdfFile.employeeID, pdfPaths: [pdfFile.pdfPath] });
         }
       });
 
-      // Save the updated pdfArray back to localStorage
+      // Store the updated pdfArray in local storage
       localStorage.setItem("pdfArray", JSON.stringify(pdfArray));
-
     } catch (error) {
-      console.error("Error generating PDFs or sending emails:", error);
-      alert("Failed to generate PDFs or send emails.");
+      console.error("Error generating PDFs:", error);  // Log error if PDF generation fails
+      setSnackbar({ open: true, message: "Failed to generate PDFs.", severity: "error" });
     }
   };
-
   return (
     <div>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-        <Button variant="contained" color="primary">
-          <CSVLink data={parsedData} filename="employee_data.csv" style={{ color: "white", textDecoration: "none" }}>
-            Export to CSV
-          </CSVLink>
+            <Box display="flex" justifyContent="space-between" mb={3}>
+         <Button variant="contained" color="primary" onClick={handleCSV} sx={{ backgroundColor: "#3f51b5", marginTop: '5px' }}>
+         <CSVLink data={tableData} filename="employee_data.csv" style={{ color: "white" }}>
+          Export to CSV
+         </CSVLink>
         </Button>
-        <Button variant="contained" color="secondary" onClick={handleGeneratePdf}>
+        <Button variant="contained" color="secondary" onClick={handleGeneratePdf} sx={{ backgroundColor: "#3f51b5" }}>
           Generate Slip
-        </Button>
+         </Button>
       </Box>
 
       <MaterialReactTable
@@ -239,6 +245,13 @@ const Table = () => {
             </Tooltip>
           ),
         })}
+          muiTableHeadCellProps={{
+          style: { fontWeight: "bold", fontSize: "15px" },
+        }}
+
+        muiTableBodyRowProps={{
+          style: { backgroundColor: "#f5f5f5" },
+        }}
       />
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
@@ -257,7 +270,18 @@ const Table = () => {
           </List>
         </Box>
       </Modal>
-    </div>
+    {/* Snackbar for messages */}
+      <Snackbar
+         open={snackbar.open}
+         autoHideDuration={6000}
+         onClose={() => setSnackbar({ ...snackbar, open: false })}
+       >
+         <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} variant="filled"
+         >
+           {snackbar.message}
+         </Alert>
+       </Snackbar>
+     </div>
   );
 };
 

@@ -6,7 +6,7 @@ employee_schema = {
     "employee_id": str,
     "gender": str,
     "designation": str,
-    # "department":str,
+    "month":str,
     "position": str,
     "date_of_joining": str,
     "employee_status": str,

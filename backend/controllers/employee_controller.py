@@ -17,7 +17,7 @@ employee_bp = Blueprint('employees', __name__)
 required_employee_fields = [
     "Name", "EmployeeID", "Gender", "Designation", "Position",
     "Date Of Joining", "Employee Status", "Working Tenure", "Allowances",
-    "Deductions", "Basic Salary", "Net Salary", "Date", "Email"
+    "Deductions", "Basic Salary", "Net Salary", "Date", "Email","Month"
 ]
 
 # Helper function to check if file is allowed
@@ -90,6 +90,7 @@ def upload_file():
                 "basic_salary": employee.get("Basic Salary"),
                 "net_salary": employee.get("Net Salary"),
                 "company_date": employee.get("Date"),
+                "month":employee.get("Month")
             }
 
             # Insert the employee record into MongoDB
