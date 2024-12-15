@@ -12,6 +12,10 @@ services:
       - MONGO_URI=${MONGO_URI}
       - JWT_SECRET=${JWT_SECRET}
       - CORS_ORIGIN=${CORS_ORIGIN}
+    volumes:
+      - /home/ubuntu/dockervolumes/unikrew/uploads:/app/uploads
+      - /home/ubuntu/dockervolumes/unikrew/pdfs:/app/pdfs
+      - /home/ubuntu/dockervolumes/unikrew/logs:/app/logs
   frontend:
     image: registry.gitlab.com/unikrew/frontend:latest
     ports:

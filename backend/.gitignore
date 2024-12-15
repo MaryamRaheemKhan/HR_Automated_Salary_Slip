@@ -4,3 +4,4 @@
 app.log
 .env
 /uploads
+/logs
