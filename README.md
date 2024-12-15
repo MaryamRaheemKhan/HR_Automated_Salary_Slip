@@ -114,9 +114,21 @@ Before setting up the project, ensure you have the following installed:
     "status": "success",
     "message": "File uploaded and parsed successfully",
     "parsedData": [
-      { "Name": "John Doe", "salary": 5000 },
-      { "Name": "Jane Smith", "salary": 7000 }
-    ]
+    {"Allowances": 10000,
+  "BasicSalary": 20000,
+  "DateofJoining": "Fri, 10 Jan 2020 00:00:00 GMT",
+  "Deductions": 5000,
+  "Designation": "Intern",
+  "Email": "faizanali@sharklasers.com",
+  "EmployeeID": "EE021",
+  "EmployeeStatus": "Active",
+  "Gender": "Male",
+  "Month": "March",
+  "Name": "Faizan Ali",
+  "NetSalary": 25000,
+  "Position": "Developer",
+  "WorkingTenure",
+  ]
   }
   
 
