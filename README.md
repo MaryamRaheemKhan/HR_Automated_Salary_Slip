@@ -182,7 +182,31 @@ Before setting up the project, ensure you have the following installed:
 - *Usage:* Logs are stored internally for tracking and troubleshooting. They can be extended for external monitoring if needed.
 
 ---
-
+## Database Explained
+The Database used is Mongodb where the schemas of two entities exist one is hr and another is employee.Here all the information related to these entities is saved in the databse so that the next time user login's information related to that user is fetched.
+1- Hr_Model ->>hr_schema = {
+    "username": str,
+    "password": str,  # Encrypted
+    "email":str,
+}
+2-Employee Model ->> employee_schema = {
+    "name": str,
+    "employee_id": str,
+    "gender": str,
+    "designation": str,
+    "month":str,
+    "position": str,
+    "date_of_joining": str,
+    "employee_status": str,
+    "working_tenure": float,
+    "allowances": float,
+    "deductions": float,
+    "basic_salary": float,
+    "net_salary": float,
+    "company_date": str,
+    "email":str
+}
+For logging, the utils.logger file is listening for events on user actions and generating a logging file to show logs.
 ## Usage Guide
 
 ### Uploading an Excel File
