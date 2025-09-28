@@ -4,7 +4,7 @@
 
 The HR Salary Slip Portal is a web-based dashboard that enables HR personnel to efficiently manage salary slip generation and distribution. With features like Excel file parsing, PDF generation, email distribution, and detailed logging, this portal streamlines the payroll process and ensures accuracy.
 
-![HR Salary Slip Portal Screenshot](frontend/public/HR_Portal.png)
+![HR Salary Slip Portal Screenshot](https://drive.google.com/file/d/1lK_1-m_zcmGMMPCK2ZPA02Vm_Xj7ptOk/view?usp=sharing)
 
 
 ## Features
